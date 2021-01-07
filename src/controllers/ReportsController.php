@@ -84,6 +84,20 @@ class ReportsController extends Controller
 			foreach($recordsArray as &$record) {
 				// This method is also a "by reference" call, hence no return value.
 				$this->plugin->reports->cleanRecordArray($record);
+				
+				//Quick way replace users id with there email 
+				if(isset($record['userId'])){
+					$userId = $record['userId'];
+					$user = Craft::$app->users->getUserById($userId);
+
+					if(isset($user->email)){
+						$record['userId'] = $user->email;
+					}else{
+						$record['userId'] = '';
+					}
+				}
+
+				
 			}
 			// Set a boolean to determine whether or not we should include the column header.
 			$includeColumnHeader = ( $offset === 0 ) ? true : false;
